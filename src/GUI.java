@@ -13,7 +13,7 @@ public class GUI {
     public static ImageIcon ball = new ImageIcon("src/assets/images/ball.png");
     public static int FRAME_WIDTH = 1000;
     public static int FRAME_HEIGHT = 700;
-    public static JLabel label = new JLabel();
+    public static JLabel sprite = new JLabel();
 
     public static void main(String[] args) {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -24,10 +24,10 @@ public class GUI {
         mainPanel.setPreferredSize(new Dimension(GUI.FRAME_WIDTH, GUI.FRAME_HEIGHT));
         mainPanel.setLayout(new OverlayLayout(mainPanel));
 
-        Controls.Pad(label);
-        label.setIcon(ball);
+        Controls.Pad(sprite);
+        sprite.setIcon(ball);
 
-        contentPanel.add(label);
+        contentPanel.add(sprite);
 
         mainPanel.add(contentPanel);
 
