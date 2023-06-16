@@ -1,8 +1,8 @@
 package src;
 
+import src.assets.components.GamePanel;
 import src.assets.util.Controls;
 import src.assets.util.DisplayImages;
-import src.assets.components.GamePanel;
 import src.assets.util.Target;
 
 import javax.swing.*;
@@ -55,32 +55,29 @@ public class GUI {
         isRunning = true;
         g = new Thread(() -> {
             synchronized (contentPanel) {
-                while (isRunning) {
-                    mainPanel.add(contentPanel);
-                    mainPanel.repaint();
-                    mainPanel.revalidate();
-                    System.out.println("contentPanel added");
+                try {
+                    while (isRunning) {
+                        mainPanel.add(contentPanel);
+                        mainPanel.repaint();
+                        mainPanel.revalidate();
+                        System.out.println("contentPanel added");
 
-                    contentPanel.add(sprite);
-                    contentPanel.add(currentPosition);
+                        contentPanel.add(sprite);
+                        contentPanel.add(currentPosition);
 
-                    Target.createTarget();
+                        Target.createTarget();
+                        contentPanel.wait();
 
-                    try {
-                        synchronized (contentPanel) {
-                            contentPanel.wait();
+                        removePaint();
+
+                        int keepPlaying = JOptionPane.showConfirmDialog(null, "Play again?");
+                        if (keepPlaying == JOptionPane.NO_OPTION) {
+                            JOptionPane.showMessageDialog(null, "OK");
+                            exit(0);
                         }
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
                     }
-
-                    removePaint();
-
-                    int keepPlaying = JOptionPane.showConfirmDialog(null, "Play again?");
-                    if (keepPlaying == JOptionPane.NO_OPTION) {
-                        JOptionPane.showMessageDialog(null, "OK");
-                        exit(0);
-                    }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
             }
         });
