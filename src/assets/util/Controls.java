@@ -4,14 +4,15 @@ import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import static src.GUI.frame;
-import static src.GUI.target;
+import static src.GUI.*;
 
-public class Controls {
-    public static int x = 0;
-    public static int y = 0;
+public class Controls extends JFrame {
+    public static int x = 75;
+    public static int y = 75;
     public static int spriteSpeed = 75;
-
+    public static void updatePosition() {
+        currentPosition.setText((y / 75) + "," + (x / 75));
+    }
     public static void Pad(JLabel sprite) {
         frame.addKeyListener(new KeyAdapter() {
             @Override
@@ -21,27 +22,27 @@ public class Controls {
                 // Controls
                 switch (keyCode) {
                     case KeyEvent.VK_W, KeyEvent.VK_UP -> {
-                        if (y > 0) {
+                        if (y > 75) {
                             y -= spriteSpeed;
-                            System.out.println("y: " + (y / 75));
+                            updatePosition();
                         }
                     }
                     case KeyEvent.VK_A, KeyEvent.VK_LEFT -> {
-                        if (x > 0) {
+                        if (x > 75) {
                             x -= spriteSpeed;
-                            System.out.println("x: " + (x / 75));
+                            updatePosition();
                         }
                     }
                     case KeyEvent.VK_S, KeyEvent.VK_DOWN -> {
-                        if (y < 600) {
+                        if (y < 525) {
                             y += spriteSpeed;
-                            System.out.println("y: " + (y / 75));
+                            updatePosition();
                         }
                     }
                     case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> {
-                        if (x < 975) {
+                        if (x < 900) {
                             x += spriteSpeed;
-                            System.out.println("x: " + (x / 75));
+                            updatePosition();
                         }
                     }
                 }
@@ -64,5 +65,4 @@ public class Controls {
             }
         });
     }
-
 }
