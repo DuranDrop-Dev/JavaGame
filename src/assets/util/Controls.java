@@ -48,15 +48,16 @@ public class Controls extends JFrame {
                     }
                     case KeyEvent.VK_SPACE -> {
                         // Verify and check position
-
                         checkSelectedPosition();
 
                         // Test messages
                         System.out.println((setY / 75) + " " + (setX / 75) + " " + isVertical);
-                        System.out.println("positionsTaken: " + positionsTaken.toString());
-                        System.out.println("hits: " + directHit);
-                        System.out.println("misses: " + missedCount);
-                        System.out.println();
+                        /*  TEST MESSAGES UNCOMMENT TO VIEW
+                            System.out.println("positionsTaken: " + positionsTaken.toString());
+                            System.out.println("hits: " + directHit);
+                            System.out.println("misses: " + missedCount);
+                            System.out.println();
+                        */
                     }
                 }
 
