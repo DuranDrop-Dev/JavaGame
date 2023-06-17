@@ -3,14 +3,13 @@ package src;
 import src.assets.components.GamePanel;
 import src.assets.util.Controls;
 import src.assets.util.DisplayImages;
-import src.assets.util.Target;
 
 import javax.swing.*;
 import java.awt.*;
 
 import static java.lang.System.exit;
 import static src.assets.util.Controls.updatePosition;
-import static src.assets.util.Target.removePaint;
+import static src.GameEngine.removePaint;
 
 public class GUI {
     public static JFrame frame = new JFrame("Sink-A-Ship");
@@ -73,8 +72,8 @@ public class GUI {
                         mainPanel.revalidate();
                         mainPanel.repaint();
 
-                        // start game
-                        Target.createTarget();
+                        // create game
+                        GameEngine.createTarget();
 
                         // regenerate images
                         contentPanel.revalidate();
