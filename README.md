@@ -73,7 +73,7 @@
 
 <h3>Images</h3>
 <h5>Cross-hair: target.png</h5>
-<li>Original File Name:</li>
+<li>Original File Name: sniper-g4814bb394_640.png</li>
 <li>Author: Clker-Free-Vector-Images</li>
 <li>Link: https://pixabay.com/vectors/sniper-aim-crosshair-cross-hairs-297661/</li>
 
