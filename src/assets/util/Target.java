@@ -1,9 +1,7 @@
 package src.assets.util;
 
 import javax.swing.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Random;
 
 import static src.GUI.*;
@@ -16,13 +14,13 @@ public class Target {
     public static int setX;
     public static ImageIcon green = DisplayImages.resizeImage("src/assets/images/green.png", 75, 75);
     public static ImageIcon red = DisplayImages.resizeImage("src/assets/images/red.png", 75, 75);
-    public static boolean[] booms;
-    public static int missSize = 16;
-    public static boolean[] isMissAdded;
-    public static int hitSize = 3;
-    public static boolean[] isHitAdded;
-    public static JLabel[] missFire;
-    public static JLabel[] hitFire;
+    public static int missSize = 12;
+    public static int missedCount;
+    public static int directHit;
+    public static boolean proceed;
+    public static ArrayList<JLabel> missFire = new ArrayList<>();
+    public static ArrayList<JLabel> hitFire = new ArrayList<>();
+    public static ArrayList<String> positionsTaken = new ArrayList<>();
 
     public static void createTargetGrid() {
         // Create ship location
@@ -42,73 +40,70 @@ public class Target {
         System.out.println((setY / 75) + " " + (setX / 75) + " " + isVertical);
     }
 
-    public static void targetOrientation() {
+    public static void checkTargetPosition() {
         // Check if hit
         if (isVertical) {
             int one = setY;
             int two = one + 75;
             int three = two + 75;
             if (one == y && setX == x) {
-                booms[0] = true;
-            }
-            if (two == y && setX == x) {
-                booms[1] = true;
-            }
-            if (three == y && setX == x) {
-                booms[2] = true;
+                directHit += 1;
+                addGreen();
+            } else if (two == y && setX == x) {
+                directHit += 1;
+                addGreen();
+
+            } else if (three == y && setX == x) {
+                directHit += 1;
+                addGreen();
+            } else {
+                addRed();
             }
         } else {
             int one = setX;
             int two = one + 75;
             int three = two + 75;
             if (one == x && setY == y) {
-                booms[0] = true;
-            }
-            if (two == x && setY == y) {
-                booms[1] = true;
-            }
-            if (three == x && setY == y) {
-                booms[2] = true;
+                directHit += 1;
+                addGreen();
+            } else if (two == x && setY == y) {
+                directHit += 1;
+                addGreen();
+            } else if (three == x && setY == y) {
+                directHit += 1;
+                addGreen();
+            } else {
+                addRed();
             }
         }
     }
 
     public static void checkBoom() {
         // Check if target is sunk
-        int threeToWIn = 0;
-
-        for (boolean boom : booms) {
-            if (!boom) {
-                threeToWIn += 0;
-            } else {
-                threeToWIn += 1;
-            }
-        }
-
-        if (threeToWIn == 3) {
+        if (directHit == 3) {
             synchronized (contentPanel) {
+                JOptionPane.showMessageDialog(null, "Winner!");
                 contentPanel.notifyAll();
             }
         }
     }
 
     public static void removePaint() {
-        JOptionPane.showMessageDialog(null, "Winner!");
-
         for (JLabel l : hitFire) {
             contentPanel.remove(l);
+            contentPanel.revalidate();
             contentPanel.repaint();
         }
 
         for (JLabel l : missFire) {
             contentPanel.remove(l);
+            contentPanel.revalidate();
             contentPanel.repaint();
         }
 
-        missFire = new JLabel[0];
-        hitFire = new JLabel[0];
-        isHitAdded = new boolean[0];
-        isMissAdded = new boolean[0];
+        missFire.clear();
+        hitFire.clear();
+        positionsTaken.clear();
 
         mainPanel.remove(contentPanel);
         mainPanel.revalidate();
@@ -119,85 +114,61 @@ public class Target {
     }
 
     public static void createTarget() {
-        isMissAdded = new boolean[missSize];
-        missFire = new JLabel[missSize];
+        // Check if missFire element has been added to contentPanel
+        missedCount = 0;
+        directHit = 0;
 
-        for (int i = 0; i < missSize; i++) {
-            missFire[i] = new JLabel(red);
-        }
-
-        for (int i = 0; i < missSize; i++) {
-            isMissAdded[i] = contentPanel.isAncestorOf(missFire[i]);
-        }
-
-        booms = new boolean[hitSize];
-        isHitAdded = new boolean[hitSize];
-        hitFire = new JLabel[hitSize];
-
-        for (int i = 0; i < hitSize; i++) {
-            hitFire[i] = new JLabel(green);
-        }
-
-        for (int i = 0; i < hitSize; i++) {
-            isHitAdded[i] = contentPanel.isAncestorOf(hitFire[i]);
-        }
-
-        Arrays.fill(booms, false);
-
+        positionsTaken.clear();
         createTargetGrid();
-
-        frame.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                // Controls
-                int keyCode = e.getKeyCode();
-                if (keyCode == KeyEvent.VK_SPACE) {
-                    // Paint
-                    targetOrientation();
-                    checkHit();
-                }
-
-                System.out.println((setY / 75) + " " + (setX / 75) + " " + isVertical);
-                System.out.println("booms: " + Arrays.toString(booms));
-                System.out.println("hits: " + Arrays.toString(isHitAdded));
-                System.out.println("misses: " + Arrays.toString(isMissAdded));
-                System.out.println();
-            }
-        });
     }
 
-    public static void checkHit() {
-        boolean hitIsTrue = false;
-        int threeToWin = 0;
-        for (int h = 0; h < hitSize; h++) {
-            if (!isHitAdded[h]) {
-                if (booms[h]) {
-                    hitFire[h].setBounds(x, y, 75, 75);
-                    contentPanel.add(hitFire[h]);
-                    contentPanel.repaint();
-                    isHitAdded[h] = true;
-                    checkBoom();
-                    hitIsTrue = true;
-                    threeToWin += 1;
+    public static void addGreen() {
+        // Add position to positionsTaken arraylist
+        positionsTaken.add((x + String.valueOf(y)));
+
+        // create new hit image and place on contentPanel
+        JLabel hit = new JLabel(green);
+        hit.setBounds(x, y, 75, 75);
+        hitFire.add(hit);
+        contentPanel.add(hitFire.get(directHit - 1));
+        contentPanel.repaint();
+
+        // check for win
+        checkBoom();
+    }
+
+    public static void addRed() {
+        if (missedCount <= missSize) {
+            missedCount += 1;
+            positionsTaken.add((x + String.valueOf(y)));
+            JLabel miss = new JLabel(red);
+            miss.setBounds(x, y, 75, 75);
+            missFire.add(miss);
+            contentPanel.add(missFire.get(missedCount - 1));
+            contentPanel.repaint();
+        }
+
+        if (missedCount == missSize) {
+            synchronized (contentPanel) {
+                JOptionPane.showMessageDialog(null, "Out of tries!!! You lose!");
+                contentPanel.notifyAll();
+            }
+        }
+    }
+
+    public static void checkSelectedPosition() {
+        proceed = true;
+        if (!positionsTaken.isEmpty()) {
+            for (String currentPos : positionsTaken) {
+                if (currentPos.equals(x + String.valueOf(y))) {
+                    proceed = false;
+                    break;
                 }
             }
         }
 
-        if (!hitIsTrue && threeToWin < hitSize) {
-            checkMiss();
-        }
-    }
-
-    public static void checkMiss() {
-        // TODO fix multiple isMissAdded on new game
-        for (int i = 0; i < 16; i++) {
-            if (!isMissAdded[i]) {
-                isMissAdded[i] = true;
-                missFire[i].setBounds(x, y, 75, 75);
-                contentPanel.add(missFire[i]);
-                contentPanel.repaint();
-                break;
-            }
+        if (proceed) {
+            checkTargetPosition();
         }
     }
 }
