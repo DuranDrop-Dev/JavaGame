@@ -5,13 +5,14 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import static src.GUI.*;
+import static src.assets.util.Target.*;
 
 public class Controls extends JFrame {
     public static int x = 75;
     public static int y = 75;
     public static int spriteSpeed = 75;
     public static void updatePosition() {
-        currentPosition.setText((y / 75) + "," + (x / 75));
+        currentPosition.setText("Position: " + (y / 75) + "," + (x / 75));
     }
     public static void Pad(JLabel sprite) {
         frame.addKeyListener(new KeyAdapter() {
@@ -44,6 +45,18 @@ public class Controls extends JFrame {
                             x += spriteSpeed;
                             updatePosition();
                         }
+                    }
+                    case KeyEvent.VK_SPACE -> {
+                        // Verify and check position
+
+                        checkSelectedPosition();
+
+                        // Test messages
+                        System.out.println((setY / 75) + " " + (setX / 75) + " " + isVertical);
+                        System.out.println("positionsTaken: " + positionsTaken.toString());
+                        System.out.println("hits: " + directHit);
+                        System.out.println("misses: " + missedCount);
+                        System.out.println();
                     }
                 }
 
