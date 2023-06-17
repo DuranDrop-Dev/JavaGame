@@ -67,7 +67,7 @@ public class GUI {
         // Main panel setting
         mainPanel.setPreferredSize(new Dimension(GUI.FRAME_WIDTH, GUI.FRAME_HEIGHT));
         mainPanel.setLayout(new OverlayLayout(mainPanel));
-        mainPanel.setBackground(Color.BLACK);
+        mainPanel.setBackground(new Color(30,52,70));
 
         // Display JFrame
         frame.setContentPane(mainPanel);
