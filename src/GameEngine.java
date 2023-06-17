@@ -1,4 +1,6 @@
-package src.assets.util;
+package src;
+
+import src.assets.util.DisplayImages;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -8,7 +10,7 @@ import static src.GUI.*;
 import static src.assets.util.Controls.x;
 import static src.assets.util.Controls.y;
 
-public class Target {
+public class GameEngine {
     public static boolean isVertical;
     public static int setY;
     public static int setX;
