@@ -1,6 +1,8 @@
 package src;
 
 import src.assets.util.DisplayImages;
+import src.assets.util.HighScore;
+import src.assets.util.SoundHandler;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -9,13 +11,12 @@ import java.util.Random;
 import static src.GUI.*;
 import static src.assets.util.Controls.x;
 import static src.assets.util.Controls.y;
+import static src.assets.util.HighScore.readDataFromFile;
 
 public class GameEngine {
     public static boolean isVertical;
     public static int setY;
     public static int setX;
-    public static ImageIcon green = DisplayImages.resizeImage("src/assets/images/green.png", 75, 75);
-    public static ImageIcon red = DisplayImages.resizeImage("src/assets/images/red.png", 75, 75);
     public static int missSize = 12;
     public static int missedCount;
     public static int directHit;
@@ -84,12 +85,32 @@ public class GameEngine {
         // Check if target is sunk
         if (directHit == 3) {
             synchronized (contentPanel) {
+                // Update winStreak
+                winStreak += 1;
+                playerInfo.setText(playerName + "(" + winStreak + ")");
+
+                // Stop background music
+                SoundHandler.clip.stop();
+
+                // SoundFX
+                SoundHandler.RunFX("src/assets/audio/victoryBlip.wav", 0);
+                SoundHandler.RunFX("src/assets/audio/victory.wav", 0);
+
                 JOptionPane.showMessageDialog(null, "Winner!");
+
+                // If new win streak is higher record to file
+                HighScore.DataModel dataModel = readDataFromFile();
+                assert dataModel != null;
+                if (winStreak > dataModel.winStreak()) {
+                    JOptionPane.showMessageDialog(null, "New HighScore!\n" +
+                            playerName + " : " + winStreak);
+                    HighScore.writeScore();
+                }
+
                 contentPanel.notifyAll();
             }
         }
     }
-
     public static void removePaint() {
         for (JLabel l : hitFire) {
             contentPanel.remove(l);
@@ -119,15 +140,25 @@ public class GameEngine {
         // Console position displayed
         System.out.println((setY / 75) + " " + (setX / 75) + " " + isVertical);
 
+        HighScore.DataModel dataModel = readDataFromFile();
+        assert dataModel != null;
+        highestWinStreak.setText("Highest Score: " + dataModel.name() + "(" + dataModel.winStreak() + ")");
+
         // Check if missFire element has been added to contentPanel
         missedCount = 0;
         directHit = 0;
+
+        int missesLeft = missSize - missedCount;
+        missesLeftLabel.setText("Tries Left: " + missesLeft);
 
         positionsTaken.clear();
         createTargetGrid();
     }
 
     public static void addGreen() {
+        // SoundFX
+        SoundHandler.RunFX("src/assets/audio/good.wav", 0);
+
         // Add position to positionsTaken arraylist
         positionsTaken.add((x + String.valueOf(y)));
 
@@ -144,8 +175,15 @@ public class GameEngine {
 
     public static void addRed() {
         if (missedCount <= missSize) {
+            // SoundFX
+            SoundHandler.RunFX("src/assets/audio/bad.wav", 0);
+
             // Add to missCount total
             missedCount += 1;
+
+            // Update tries
+            int missesLeft = missSize - missedCount;
+            missesLeftLabel.setText("Tries Left: " + missesLeft);
 
             // Take up position
             positionsTaken.add((x + String.valueOf(y)));
@@ -161,6 +199,14 @@ public class GameEngine {
         // Limited tries are checked here
         if (missedCount == missSize) {
             synchronized (contentPanel) {
+                winStreak = 0;
+                playerInfo.setText(playerName + "(" + winStreak + ")");
+
+                SoundHandler.clip.stop();
+
+                SoundHandler.RunFX("src/assets/audio/lostBlip.wav", 0);
+                SoundHandler.RunFX("src/assets/audio/lost.wav", 0);
+
                 JOptionPane.showMessageDialog(null, "Out of tries!!! You lose!");
                 contentPanel.notifyAll();
             }
