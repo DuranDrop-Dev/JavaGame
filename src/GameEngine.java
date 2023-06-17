@@ -1,6 +1,5 @@
 package src;
 
-import src.assets.util.DisplayImages;
 import src.assets.util.HighScore;
 import src.assets.util.SoundHandler;
 
