@@ -5,7 +5,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import static src.GUI.*;
-import static src.assets.util.Target.*;
+import static src.GameEngine.*;
 
 public class Controls extends JFrame {
     public static int x = 75;
