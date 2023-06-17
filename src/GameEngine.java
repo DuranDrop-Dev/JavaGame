@@ -40,7 +40,7 @@ public class GameEngine {
         isVertical = orient == 1;
 
         // Test: display location and orientation
-        System.out.println((setY / 75) + " " + (setX / 75) + " " + isVertical);
+        System.out.println("Target Position: " + (setY / 75) + "," + (setX / 75) + "\nOrientation Is Vertical: " + isVertical);
     }
 
     public static void checkTargetPosition() {
@@ -143,9 +143,6 @@ public class GameEngine {
     }
 
     public static void createTarget() {
-        // Console position displayed
-        System.out.println((setY / 75) + " " + (setX / 75) + " " + isVertical);
-
         // Reads and displays top win streak from file
         HighScore.DataModel dataModel = readDataFromFile();
         assert dataModel != null;
