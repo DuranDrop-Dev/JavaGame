@@ -5,6 +5,7 @@ import src.assets.util.SoundHandler;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 
 import static src.GUI.*;
@@ -13,19 +14,19 @@ import static src.assets.util.Controls.y;
 import static src.assets.util.HighScore.readDataFromFile;
 
 public class GameEngine {
-    public static boolean isVertical;
-    public static int setY;
-    public static int setX;
-    public static int missSize = 12;
-    public static int missedCount;
-    public static int directHit;
-    public static boolean proceed;
-    public static ArrayList<JLabel> missFire = new ArrayList<>();
-    public static ArrayList<JLabel> hitFire = new ArrayList<>();
-    public static ArrayList<String> positionsTaken = new ArrayList<>();
+    public static boolean isVertical; // target orientation
+    public static int setY; // target initial Y position
+    public static int setX; // target initial X position
+    public static int missSize = 12; // incorrect tries allowed
+    public static int missedCount; // incorrect tries
+    public static int directHit; // correct tries
+    public static boolean proceed; // checks if try position x and y are already taken
+    public static LinkedList<JLabel> missFire = new LinkedList<>(); // holds red dot JLabels
+    public static LinkedList<JLabel> hitFire = new LinkedList<>(); // holds green dot JLabels
+    public static ArrayList<String> positionsTaken = new ArrayList<>(); // holds taken x and y positions
 
     public static void createTargetGrid() {
-        // Create ship location
+        // Create target location
         Random rand = new Random();
 
         setY = rand.nextInt(5) * 75;
@@ -34,7 +35,7 @@ public class GameEngine {
         setX = rand.nextInt(10) * 75;
         if (setX == 0) setX = 75;
 
-        // Create and set orientation of ship
+        // Create and set orientation of target
         int orient = rand.nextInt(2);
         isVertical = orient == 1;
 
@@ -106,11 +107,14 @@ public class GameEngine {
                     HighScore.writeScore();
                 }
 
+                // continue game loop
                 contentPanel.notifyAll();
             }
         }
     }
+
     public static void removePaint() {
+        // Reset components
         for (JLabel l : hitFire) {
             contentPanel.remove(l);
             contentPanel.revalidate();
@@ -123,14 +127,17 @@ public class GameEngine {
             contentPanel.repaint();
         }
 
+        // Clears arrays
         missFire.clear();
         hitFire.clear();
         positionsTaken.clear();
 
+        // Reset main JPanel
         mainPanel.remove(contentPanel);
         mainPanel.revalidate();
         mainPanel.repaint();
 
+        // Reset main frame
         frame.revalidate();
         frame.repaint();
     }
@@ -139,6 +146,7 @@ public class GameEngine {
         // Console position displayed
         System.out.println((setY / 75) + " " + (setX / 75) + " " + isVertical);
 
+        // Reads and displays top win streak from file
         HighScore.DataModel dataModel = readDataFromFile();
         assert dataModel != null;
         highestWinStreak.setText("Highest Score: " + dataModel.name() + "(" + dataModel.winStreak() + ")");
@@ -147,10 +155,11 @@ public class GameEngine {
         missedCount = 0;
         directHit = 0;
 
+        // Displays tries left
         int missesLeft = missSize - missedCount;
         missesLeftLabel.setText("Tries Left: " + missesLeft);
 
-        positionsTaken.clear();
+        // Create new target grid
         createTargetGrid();
     }
 
@@ -198,14 +207,18 @@ public class GameEngine {
         // Limited tries are checked here
         if (missedCount == missSize) {
             synchronized (contentPanel) {
+                // Reset current win streak
                 winStreak = 0;
                 playerInfo.setText(playerName + "(" + winStreak + ")");
 
+                // BG music is paused
                 SoundHandler.clip.stop();
 
+                // Queue lose sound effects
                 SoundHandler.RunFX("src/assets/audio/lostBlip.wav", 0);
                 SoundHandler.RunFX("src/assets/audio/lost.wav", 0);
 
+                // Restart game
                 JOptionPane.showMessageDialog(null, "Out of tries!!! You lose!");
                 contentPanel.notifyAll();
             }
@@ -213,6 +226,7 @@ public class GameEngine {
     }
 
     public static void checkSelectedPosition() {
+        // Checks if current position is taken
         proceed = true;
         if (!positionsTaken.isEmpty()) {
             for (String currentPos : positionsTaken) {
