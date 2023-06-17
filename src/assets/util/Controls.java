@@ -26,24 +26,28 @@ public class Controls extends JFrame {
                         if (y > 75) {
                             y -= spriteSpeed;
                             updatePosition();
+                            SoundHandler.RunFX("src/assets/audio/blip.wav", 0);
                         }
                     }
                     case KeyEvent.VK_A, KeyEvent.VK_LEFT -> {
                         if (x > 75) {
                             x -= spriteSpeed;
                             updatePosition();
+                            SoundHandler.RunFX("src/assets/audio/blip.wav", 0);
                         }
                     }
                     case KeyEvent.VK_S, KeyEvent.VK_DOWN -> {
                         if (y < 525) {
                             y += spriteSpeed;
                             updatePosition();
+                            SoundHandler.RunFX("src/assets/audio/blip.wav", 0);
                         }
                     }
                     case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> {
                         if (x < 900) {
                             x += spriteSpeed;
                             updatePosition();
+                            SoundHandler.RunFX("src/assets/audio/blip.wav", 0);
                         }
                     }
                     case KeyEvent.VK_SPACE ->
