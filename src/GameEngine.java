@@ -116,6 +116,9 @@ public class GameEngine {
     }
 
     public static void createTarget() {
+        // Console position displayed
+        System.out.println((setY / 75) + " " + (setX / 75) + " " + isVertical);
+
         // Check if missFire element has been added to contentPanel
         missedCount = 0;
         directHit = 0;
@@ -141,8 +144,13 @@ public class GameEngine {
 
     public static void addRed() {
         if (missedCount <= missSize) {
+            // Add to missCount total
             missedCount += 1;
+
+            // Take up position
             positionsTaken.add((x + String.valueOf(y)));
+
+            // Create and add new green dot image
             JLabel miss = new JLabel(red);
             miss.setBounds(x, y, 75, 75);
             missFire.add(miss);
@@ -150,6 +158,7 @@ public class GameEngine {
             contentPanel.repaint();
         }
 
+        // Limited tries are checked here
         if (missedCount == missSize) {
             synchronized (contentPanel) {
                 JOptionPane.showMessageDialog(null, "Out of tries!!! You lose!");
@@ -174,6 +183,3 @@ public class GameEngine {
         }
     }
 }
-
-
-
