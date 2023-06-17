@@ -46,7 +46,7 @@ public class Controls extends JFrame {
                             updatePosition();
                         }
                     }
-                    case KeyEvent.VK_SPACE -> {
+                    case KeyEvent.VK_SPACE ->
                         // Verify and check position
                         checkSelectedPosition();
 
@@ -57,7 +57,6 @@ public class Controls extends JFrame {
                             System.out.println("misses: " + missedCount);
                             System.out.println();
                         */
-                    }
                 }
 
                 // Walls
