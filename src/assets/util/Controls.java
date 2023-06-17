@@ -50,9 +50,8 @@ public class Controls extends JFrame {
                         // Verify and check position
                         checkSelectedPosition();
 
-                        // Test messages
-                        System.out.println((setY / 75) + " " + (setX / 75) + " " + isVertical);
                         /*  TEST MESSAGES UNCOMMENT TO VIEW
+                            System.out.println((setY / 75) + " " + (setX / 75) + " " + isVertical);
                             System.out.println("positionsTaken: " + positionsTaken.toString());
                             System.out.println("hits: " + directHit);
                             System.out.println("misses: " + missedCount);
