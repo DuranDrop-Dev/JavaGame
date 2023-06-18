@@ -1,6 +1,7 @@
 package src;
 
 import src.assets.components.GamePanel;
+import src.assets.components.Player;
 import src.assets.util.*;
 
 import javax.swing.*;
@@ -27,8 +28,8 @@ public class GUI {
     public static JLabel highestWinStreak = new JLabel("", SwingConstants.CENTER); // displays highest win streak
     public static JLabel missesLeftLabel = new JLabel("", SwingConstants.CENTER); // displays incorrect tries left
     public static Thread gameLoop; // holds a looped game
-    public static String playerName; // global player variable
-    public static int winStreak; // global win streak variable
+    public static Player playerOne = new Player(); // player object
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(GUI::createAndShowGUI);
     }
@@ -67,7 +68,7 @@ public class GUI {
         // Main panel setting
         mainPanel.setPreferredSize(new Dimension(GUI.FRAME_WIDTH, GUI.FRAME_HEIGHT));
         mainPanel.setLayout(new OverlayLayout(mainPanel));
-        mainPanel.setBackground(new Color(30,52,70));
+        mainPanel.setBackground(new Color(30, 52, 70));
 
         // Display JFrame
         frame.setContentPane(mainPanel);
@@ -85,28 +86,30 @@ public class GUI {
         boolean goodToGo = false;
         while (!goodToGo) {
             try {
-                String input = JOptionPane.showInputDialog(null, "Enter Player Name:");
-                if (input == null) {
+                String first = JOptionPane.showInputDialog(null, "Enter Player First Name:");
+                if (first == null) {
                     throw new NoNullException();
                 } else {
-                    playerName = input.trim();
-                    if (playerName.length() == 0) {
-                        throw new NoNullException();
+                    if (first.length() > 10) {
+                        throw new InputLengthLimitException();
                     } else {
-                        if (playerName.length() > 10) {
-                            throw new InputLengthLimitException();
-                        } else {
-                            goodToGo = true;
-                        }
+                        playerOne.setFirstName(first.trim());
                     }
+                }
+                String last = JOptionPane.showInputDialog(null, "Enter Player Last Name (OR PRESS ENTER TO SKIP):");
+                if (last.length() > 10) {
+                    throw new InputLengthLimitException();
+                } else {
+                    playerOne.setLastName(last.trim());
+                    goodToGo = true;
                 }
             } catch (InputLengthLimitException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage());
-            }  catch (NoNullException e) {
+            } catch (NoNullException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage());
             }
-            winStreak = 0;
-            playerInfo.setText(playerName + "(" + winStreak + ")");
+            playerOne.setWinStreak();
+            playerInfo.setText(playerOne.displayPlayerAndStats());
             playerInfo.setBounds(0, 0, FRAME_WIDTH, 75);
             playerInfo.setFont(boldFont);
             playerInfo.setForeground(Color.white);

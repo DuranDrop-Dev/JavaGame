@@ -86,8 +86,8 @@ public class GameEngine {
         if (directHit == 3) {
             synchronized (contentPanel) {
                 // Update winStreak
-                winStreak += 1;
-                playerInfo.setText(playerName + "(" + winStreak + ")");
+                playerOne.setWinStreak(1);
+                playerInfo.setText(playerOne.displayPlayerAndStats());
 
                 // Stop background music
                 SoundHandler.clip.stop();
@@ -101,10 +101,10 @@ public class GameEngine {
                 // If new win streak is higher record to file
                 HighScore.DataModel dataModel = readDataFromFile();
                 assert dataModel != null;
-                if (winStreak > dataModel.winStreak()) {
+                if (playerOne.getWinStreak() > dataModel.winStreak()) {
                     JOptionPane.showMessageDialog(null, "New HighScore!\n" +
-                            playerName + " : " + winStreak);
-                    HighScore.writeScore();
+                            playerOne.displayPlayerAndStats());
+                    HighScore.writeScore(playerOne.toString(), playerOne.getWinStreak());
                 }
 
                 // continue game loop
@@ -146,7 +146,7 @@ public class GameEngine {
         // Reads and displays top win streak from file
         HighScore.DataModel dataModel = readDataFromFile();
         assert dataModel != null;
-        highestWinStreak.setText("Highest Score: " + dataModel.name() + "(" + dataModel.winStreak() + ")");
+        highestWinStreak.setText("Highest Score: " + dataModel.name() + " ( " + dataModel.winStreak() + " )");
 
         // Check if missFire element has been added to contentPanel
         missedCount = 0;
@@ -205,8 +205,8 @@ public class GameEngine {
         if (missedCount == missSize) {
             synchronized (contentPanel) {
                 // Reset current win streak
-                winStreak = 0;
-                playerInfo.setText(playerName + "(" + winStreak + ")");
+                playerOne.resetWinStreak();
+                playerInfo.setText(playerOne.displayPlayerAndStats());
 
                 // BG music is paused
                 SoundHandler.clip.stop();
