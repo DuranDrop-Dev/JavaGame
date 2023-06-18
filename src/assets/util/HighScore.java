@@ -2,13 +2,10 @@ package src.assets.util;
 
 import java.io.*;
 
-import static src.GUI.playerName;
-import static src.GUI.winStreak;
-
 public class HighScore {
-    public static void writeScore() {
+    public static void writeScore(String player, int wins) {
         // Write data to the text file
-        writeDataToFile(playerName, winStreak);
+        writeDataToFile(String.valueOf(player), wins);
 
         // TEST: read data from the text file
         DataModel tempModel = readDataFromFile();
