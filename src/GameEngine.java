@@ -1,5 +1,6 @@
 package src;
 
+import src.assets.components.TopPlayer;
 import src.assets.util.HighScore;
 import src.assets.util.SoundHandler;
 
@@ -104,7 +105,7 @@ public class GameEngine {
                 if (playerOne.getWinStreak() > dataModel.winStreak()) {
                     JOptionPane.showMessageDialog(null, "New HighScore!\n" +
                             playerOne.displayPlayerAndStats());
-                    HighScore.writeScore(playerOne.toString(), playerOne.getWinStreak());
+                    HighScore.writeScore(playerOne.getFirstName(), playerOne.getLastName(), playerOne.getWinStreak());
                 }
 
                 // continue game loop
@@ -144,9 +145,8 @@ public class GameEngine {
 
     public static void createTarget() {
         // Reads and displays top win streak from file
-        HighScore.DataModel dataModel = readDataFromFile();
-        assert dataModel != null;
-        highestWinStreak.setText("Highest Score: " + dataModel.name() + " ( " + dataModel.winStreak() + " )");
+        topPlayer = new TopPlayer();
+        highestWinStreak.setText("Top Player: " + topPlayer.displayPlayerAndStats());
 
         // Check if missFire element has been added to contentPanel
         missedCount = 0;
