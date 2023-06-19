@@ -1,7 +1,8 @@
 package src;
 
 import src.assets.components.GamePanel;
-import src.assets.components.Player;
+import src.assets.components.ActivePlayer;
+import src.assets.components.TopPlayer;
 import src.assets.util.*;
 
 import javax.swing.*;
@@ -28,7 +29,8 @@ public class GUI {
     public static JLabel highestWinStreak = new JLabel("", SwingConstants.CENTER); // displays highest win streak
     public static JLabel missesLeftLabel = new JLabel("", SwingConstants.CENTER); // displays incorrect tries left
     public static Thread gameLoop; // holds a looped game
-    public static Player playerOne = new Player(); // player object
+    public static ActivePlayer playerOne = new ActivePlayer(); // player object
+    public static TopPlayer topPlayer; // object of a top player
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(GUI::createAndShowGUI);
@@ -109,6 +111,7 @@ public class GUI {
                 JOptionPane.showMessageDialog(null, e.getMessage());
             }
             playerOne.setWinStreak();
+
             playerInfo.setText(playerOne.displayPlayerAndStats());
             playerInfo.setBounds(0, 0, FRAME_WIDTH, 75);
             playerInfo.setFont(boldFont);
