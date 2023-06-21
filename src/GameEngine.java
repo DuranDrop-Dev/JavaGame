@@ -1,5 +1,7 @@
 package src;
 
+import src.assets.components.GreenMark;
+import src.assets.components.RedMark;
 import src.assets.components.TopPlayer;
 import src.assets.util.HighScore;
 import src.assets.util.SoundHandler;
@@ -168,7 +170,7 @@ public class GameEngine {
         positionsTaken.add((x + String.valueOf(y)));
 
         // create new hit image and place on contentPanel
-        JLabel hit = new JLabel(green);
+        JLabel hit = new GreenMark();
         hit.setBounds(x, y, 75, 75);
         hitFire.add(hit);
         contentPanel.add(hitFire.get(directHit - 1));
@@ -194,7 +196,7 @@ public class GameEngine {
             positionsTaken.add((x + String.valueOf(y)));
 
             // Create and add new green dot image
-            JLabel miss = new JLabel(red);
+            JLabel miss = new RedMark();
             miss.setBounds(x, y, 75, 75);
             missFire.add(miss);
             contentPanel.add(missFire.get(missedCount - 1));
